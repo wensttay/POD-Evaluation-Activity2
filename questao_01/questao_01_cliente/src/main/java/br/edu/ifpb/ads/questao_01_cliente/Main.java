@@ -29,7 +29,7 @@ public class Main {
             empresa.addCliente(new Cliente(3, "Wensttay"));
             
             System.out.println("Salvando a Empresa e seus Clientes ...");
-//            SalvarEmpresa(empresa);
+            SalvarEmpresa(empresa);
             
             System.out.println("Recuperando Empresa salva e seus Clientes ...");
             Empresa empresaRecueprada = ObterEmpresa(empresa.getId());
