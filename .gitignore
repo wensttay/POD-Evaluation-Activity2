@@ -16,3 +16,7 @@ hs_err_pid*
 /questao_03/questao_02_node1/target/
 /questao_03/questao_02_client/target/
 /questao_03/questao_03_client/target/
+/questao_05/questao_05_server/target/
+/questao_05/questao_05/questao_05_client/target/
+/questao_05/questao_05/questao_05_server/target/
+/questao_05/questao_05/questao_05_shared/target/

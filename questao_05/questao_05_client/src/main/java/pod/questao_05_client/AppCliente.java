@@ -17,7 +17,9 @@ import pod.questao_05.interfaces.Topic;
 public class AppCliente {
     public static void main(String[] args) throws RemoteException, NotBoundException {
         
-        String uuid = "Wensttay@gmail.com";
+        String uuid = "wensttay@gmail.com";
+        
+        System.out.println("Logado como: " + uuid);
         Registry registry = LocateRegistry.getRegistry(10999);
         
         Topic topic = (Topic) registry.lookup("_ChatServer_");
@@ -28,6 +30,7 @@ public class AppCliente {
         topic.register(uuid, client);
         
         Scanner scanner = new Scanner(System.in);
+        
         while (true) {            
             String text = scanner.nextLine();
             

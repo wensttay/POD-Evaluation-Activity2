@@ -16,6 +16,7 @@ public class Message implements Serializable {
 
     private String from;
     private String text;
+    private String to;
 
     public String getFrom() {
         return from;
@@ -33,6 +34,14 @@ public class Message implements Serializable {
         this.text = text;
     }
 
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
+    
     @Override
     public String toString() {
         return from + ": " + text;

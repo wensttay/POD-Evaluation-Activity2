@@ -20,34 +20,29 @@ public class ChatServer extends TopicManager {
     private final NotificationRepository notificationRepository;
     private final SubscriberRepository subscriberRepository;
     private final OnlineSubscribers onlineSubscribers;
-    private final OnlineNotifications onlineNotifications;
+//    private final OnlineNotifications onlineNotifications;
 
     public ChatServer() throws RemoteException {
         super();
-        this.onlineNotifications = new OnlineNotifications();
-        this.notificationRepository = new NotificationRepository(onlineNotifications);
+//        this.onlineNotifications = new OnlineNotifications();
+//        this.notificationRepository = new NotificationRepository(onlineNotifications);
 
         this.onlineSubscribers = new OnlineSubscribers();
+        this.notificationRepository = new NotificationRepository(onlineSubscribers);
         this.subscriberRepository = new SubscriberRepository(onlineSubscribers);
     }
 
     @Override
     public void publish(Message msg) throws RemoteException {
         System.out.println("Publicando: " + msg.toString());
-        List<Subscriber> subscribers = new ArrayList<>();
-
+       
         String[] listUUIDs = subscriberRepository.listUUIDs();
 
         for (String uuid : listUUIDs) {
             if (!msg.getFrom().equals(uuid)) {
-                Subscriber sub = subscriberRepository.find(uuid);
-                subscribers.add(sub);
+                msg.setTo(uuid);
+                notificationRepository.store(new Notification(msg));
             }
-        }
-
-        if (!subscribers.isEmpty()) {
-            Subscriber[] subs = subscribers.toArray(new Subscriber[subscribers.size()]);
-            notificationRepository.store(new Notification(msg, subs));
         }
     }
 
@@ -62,20 +57,29 @@ public class ChatServer extends TopicManager {
         System.out.println("Efetuando todas notificações ...");
 
         String[] uuids = subscriberRepository.listUUIDs();
+        
         for (String uuid : uuids) {
-
+            
             Notification[] listNotifications = notificationRepository.listNotifications(uuid);
             for (Notification notific : listNotifications) {
-
-//                List<Subscriber> notAlerteds = new ArrayList<>();
+                System.out.println("Notificação !! > " + notific.getMsg().getText());
+                
                 Subscriber[] subs = notific.getSubs();
                 for (Subscriber sub : subs) {
+                    boolean updated = true;
                     try {
                         if (sub != null) {
-                            sub.update(notific.getMsg());
+                            sub.update(notific.getMsg()); 
+                        //
+                        // Se acontecer exeção aqui ele volta depois de tratar?
+                        //
                         }
                     } catch (RemoteException ex) {
-//                        notAlerteds.add(sub);
+                        updated = false;
+                    }
+                    
+                    if(updated){
+                        notificationRepository.removeNotifications(notific.getId());
                     }
                 }
 
@@ -89,7 +93,7 @@ public class ChatServer extends TopicManager {
 //                    onlineNotifications.store(uuid, notAlertedArray);
 //                }
             }
-            notificationRepository.removeNotifications(uuid);
+            
         }
     }
 

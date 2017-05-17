@@ -1,0 +1,15 @@
+-- CREATE TABLES
+
+CREATE TABLE users(
+	uuid TEXT UNIQUE
+);
+
+CREATE TABLE notification (
+	id SERIAL,
+	uuidFrom TEXT,
+	message TEXT,
+	uuidTo TEXT,
+	PRIMARY KEY (id),
+	FOREIGN KEY (uuidFrom) REFERENCES users(uuid),
+	FOREIGN KEY (uuidTo) REFERENCES users(uuid)
+);
